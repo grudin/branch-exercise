@@ -30,13 +30,13 @@ class GitHubUserService implements UserService {
             gitHubUser.avatarUrl(),
             gitHubUser.location(),
             gitHubUser.email(),
-            gitHubUser.url(),
+            gitHubUser.htmlUrl(),
             gitHubUser.createdAt(),
             gitHubRepos.stream().map(this::toDto).toList()
         );
     }
 
     private Repo toDto(GitHubRepo gitHubRepo) {
-        return new Repo(gitHubRepo.name(), gitHubRepo.url());
+        return new Repo(gitHubRepo.name(), gitHubRepo.htmlUrl());
     }
 }

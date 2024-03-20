@@ -42,7 +42,7 @@ class GitHubUserServiceTest {
                 "foobar",
                 1L,
                 "https://github.com/images/error/octocat_happy.gif",
-                "https://api.github.com/users/foobar",
+                "https://github.com/foobar",
                 "https://api.github.com/users/foobar/repos",
                 "Foo Bar",
                 "Minneapolis",
@@ -52,7 +52,7 @@ class GitHubUserServiceTest {
         );
 
         when(gitHubClient.getRepos("foobar")).thenReturn(
-            List.of(new GitHubRepo(1296269L, "Hello-World", "https://api.github.com/repos/foobar/Hello-World"))
+            List.of(new GitHubRepo(1296269L, "Hello-World", "https://github.com/foobar/Hello-World"))
         );
 
         var expected = new User(
@@ -61,9 +61,9 @@ class GitHubUserServiceTest {
             "https://github.com/images/error/octocat_happy.gif",
             "Minneapolis",
             "foobar@example.com",
-            "https://api.github.com/users/foobar",
+            "https://github.com/foobar",
             Instant.from(OffsetDateTime.of(2020, 1, 1, 12, 0, 0, 0, ZoneOffset.UTC)),
-            List.of(new Repo("Hello-World", "https://api.github.com/repos/foobar/Hello-World"))
+            List.of(new Repo("Hello-World", "https://github.com/foobar/Hello-World"))
         );
 
         assertEquals(expected, gitHubUserService.getUser("foobar"));

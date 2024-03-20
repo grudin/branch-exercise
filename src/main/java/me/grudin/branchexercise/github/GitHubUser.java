@@ -9,7 +9,7 @@ public record GitHubUser(
     String login,
     Long id,
     String avatarUrl,
-    String url,
+    String htmlUrl,
     String reposUrl,
     String name,
     String location,

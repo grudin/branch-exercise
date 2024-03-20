@@ -97,7 +97,7 @@ class GitHubClientImplIntegrationTest {
                 "foobar",
                 1L,
                 "https://github.com/images/error/octocat_happy.gif",
-                "https://api.github.com/users/foobar",
+                "https://github.com/foobar",
                 "https://api.github.com/users/foobar/repos",
                 "Foo Bar",
                 "Minneapolis",
@@ -276,7 +276,7 @@ class GitHubClientImplIntegrationTest {
         );
 
         assertEquals(
-            List.of(new GitHubRepo(1296269L, "Hello-World", "https://api.github.com/repos/foobar/Hello-World")),
+            List.of(new GitHubRepo(1296269L, "Hello-World", "https://github.com/foobar/Hello-World")),
             gitHubClient.getRepos("foobar")
         );
     }

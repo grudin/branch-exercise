@@ -39,9 +39,9 @@ class UserControllerMvcTest {
                 "https://github.com/images/error/octocat_happy.gif",
                 "Minneapolis",
                 "foobar@example.com",
-                "https://api.github.com/users/foobar",
+                "https://github.com/foobar",
                 Instant.from(OffsetDateTime.of(2020, 1, 1, 12, 0, 0, 0, ZoneOffset.UTC)),
-                List.of(new Repo("Hello-World", "https://api.github.com/repos/foobar/Hello-World"))
+                List.of(new Repo("Hello-World", "https://github.com/foobar/Hello-World"))
             )
         );
 
@@ -59,8 +59,14 @@ class UserControllerMvcTest {
                           "avatar": "https://github.com/images/error/octocat_happy.gif",
                           "geo_location": "Minneapolis",
                           "email": "foobar@example.com",
-                          "url": "https://api.github.com/users/foobar",
-                          "created_at": "2020-01-01T12:00:00Z"
+                                  "url": "https://github.com/foobar",
+                                  "created_at": "2020-01-01T12:00:00Z",
+                                  "repos": [
+                                    {
+                                      "name": "Hello-World",
+                                      "url": "https://github.com/foobar/Hello-World"
+                                    }
+                                  ]
                         }
                         """
                     )
