@@ -25,7 +25,7 @@ class GitHubClientImpl implements GitHubClient {
     private final GitHubProperties gitHubProperties;
 
     @Override
-    public GitHubGetUserResponse getUser(String username) {
+    public GitHubUser getUser(String username) {
         if (StringUtils.isBlank(username)) {
             log.warn("Attempted to retrieve a user without a username.");
             throw new IllegalArgumentException("Username must not be blank.");
@@ -42,7 +42,7 @@ class GitHubClientImpl implements GitHubClient {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         try {
-            return restTemplate.exchange(uri, HttpMethod.GET, requestEntity, GitHubGetUserResponse.class).getBody();
+            return restTemplate.exchange(uri, HttpMethod.GET, requestEntity, GitHubUser.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {
                 log.error("User: {} not found.", username, e);

@@ -1,9 +1,11 @@
 package me.grudin.branchexercise.user;
 
 import io.micrometer.common.util.StringUtils;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import me.grudin.branchexercise.github.GitHubClient;
-import me.grudin.branchexercise.github.GitHubGetUserResponse;
+import me.grudin.branchexercise.github.GitHubRepo;
+import me.grudin.branchexercise.github.GitHubUser;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,18 +20,23 @@ class GitHubUserService implements UserService {
             throw new IllegalArgumentException("Username must not be blank.");
         }
 
-        return toDto(gitHubClient.getUser(username));
+        return toDto(gitHubClient.getUser(username), gitHubClient.getRepos(username));
     }
 
-    private User toDto(GitHubGetUserResponse response) {
+    private User toDto(GitHubUser gitHubUser, List<GitHubRepo> gitHubRepos) {
         return new User(
-            response.login(),
-            response.name(),
-            response.avatarUrl(),
-            response.location(),
-            response.email(),
-            response.url(),
-            response.createdAt()
+            gitHubUser.login(),
+            gitHubUser.name(),
+            gitHubUser.avatarUrl(),
+            gitHubUser.location(),
+            gitHubUser.email(),
+            gitHubUser.url(),
+            gitHubUser.createdAt(),
+            gitHubRepos.stream().map(this::toDto).toList()
         );
+    }
+
+    private Repo toDto(GitHubRepo gitHubRepo) {
+        return new Repo(gitHubRepo.name(), gitHubRepo.url());
     }
 }

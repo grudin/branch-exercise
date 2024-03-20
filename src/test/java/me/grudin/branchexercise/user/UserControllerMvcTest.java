@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import me.grudin.branchexercise.github.GitHubClientException;
 import me.grudin.branchexercise.github.GitHubResourceNotFoundException;
 import me.grudin.branchexercise.github.GitHubServerException;
@@ -39,7 +40,8 @@ class UserControllerMvcTest {
                 "Minneapolis",
                 "foobar@example.com",
                 "https://api.github.com/users/foobar",
-                Instant.from(OffsetDateTime.of(2020, 1, 1, 12, 0, 0, 0, ZoneOffset.UTC))
+                Instant.from(OffsetDateTime.of(2020, 1, 1, 12, 0, 0, 0, ZoneOffset.UTC)),
+                List.of(new Repo("Hello-World", "https://api.github.com/repos/foobar/Hello-World"))
             )
         );
 

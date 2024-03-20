@@ -14,7 +14,7 @@ public interface GitHubClient {
      * @throws GitHubClientException           if there is an unexpected client-side issue during the request
      * @throws GitHubServerException           if there is an unexpected server-side issue during the request
      */
-    GitHubGetUserResponse getUser(String username);
+    GitHubUser getUser(String username);
 
     /**
      * List repos for a GitHub user.

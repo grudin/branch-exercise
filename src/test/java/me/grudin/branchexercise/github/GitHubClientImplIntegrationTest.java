@@ -93,7 +93,7 @@ class GitHubClientImplIntegrationTest {
         );
 
         assertEquals(
-            new GitHubGetUserResponse(
+            new GitHubUser(
                 "foobar",
                 1L,
                 "https://github.com/images/error/octocat_happy.gif",
