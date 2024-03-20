@@ -1,6 +1,6 @@
 package me.grudin.branchexercise.github;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,21 +32,21 @@ class GitHubClientImplTest {
     class GetUser {
 
         @Test
-        @DisplayName("returns null for null username")
+        @DisplayName("throws `IllegalArgumentException` for null username")
         void nullUsername() {
-            assertNull(gitHubClient.getUser(null));
+            assertThrows(IllegalArgumentException.class, () -> gitHubClient.getUser(null));
         }
 
         @Test
-        @DisplayName("returns null for empty username")
+        @DisplayName("throws `IllegalArgumentException` for empty username")
         void emptyUsername() {
-            assertNull(gitHubClient.getUser(""));
+            assertThrows(IllegalArgumentException.class, () -> gitHubClient.getUser(""));
         }
 
         @Test
-        @DisplayName("returns null for blank username")
+        @DisplayName("throws `IllegalArgumentException` for blank username")
         void blankUsername() {
-            assertNull(gitHubClient.getUser("   "));
+            assertThrows(IllegalArgumentException.class, () -> gitHubClient.getUser("   "));
         }
     }
 }

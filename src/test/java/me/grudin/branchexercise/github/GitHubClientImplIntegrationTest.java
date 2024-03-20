@@ -1,13 +1,15 @@
 package me.grudin.branchexercise.github;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.notFound;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
+import static com.github.tomakehurst.wiremock.client.WireMock.status;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
@@ -110,11 +113,19 @@ class GitHubClientImplIntegrationTest {
         }
 
         @Test
-        @DisplayName("returns null for 404 Not Found response")
-        void notFound() {
+        @DisplayName("throws `GitHubClientException` for 429 Too Many Requests")
+        void tooManyRequests() {
+            stubFor(get("/users/foobar").willReturn(status(HttpStatus.TOO_MANY_REQUESTS.value())));
+
+            assertThrows(GitHubClientException.class, () -> gitHubClient.getUser("foobar"));
+        }
+
+        @Test
+        @DisplayName("throws `GitHubResourceNotFoundException` for 404 Not Found response")
+        void userNotFound() {
             stubFor(
                 get("/users/foobar").willReturn(
-                    WireMock.notFound()
+                    notFound()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
                         .withBody(
                             """
@@ -127,15 +138,15 @@ class GitHubClientImplIntegrationTest {
                 )
             );
 
-            assertNull(gitHubClient.getUser("foobar"));
+            assertThrows(GitHubResourceNotFoundException.class, () -> gitHubClient.getUser("foobar"));
         }
 
         @Test
-        @DisplayName("returns null for 500 Internal Server Error")
+        @DisplayName("throws `GitHubServerException` for 500 Internal Server Error")
         void internalServerError() {
-            stubFor(get("/users/foobar").willReturn(WireMock.serverError()));
+            stubFor(get("/users/foobar").willReturn(serverError()));
 
-            assertNull(gitHubClient.getUser("foobar"));
+            assertThrows(GitHubServerException.class, () -> gitHubClient.getUser("foobar"));
         }
     }
 }

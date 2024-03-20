@@ -7,8 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientResponseException;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -24,7 +26,7 @@ class GitHubClientImpl implements GitHubClient {
     public GitHubGetUserResponse getUser(String username) {
         if (StringUtils.isBlank(username)) {
             log.warn("Attempted to retrieve a user without a username.");
-            return null;
+            throw new IllegalArgumentException("Username must not be blank.");
         }
 
         URI uri = UriComponentsBuilder.fromHttpUrl(gitHubProperties.getBaseUrl())
@@ -39,9 +41,17 @@ class GitHubClientImpl implements GitHubClient {
 
         try {
             return restTemplate.exchange(uri, HttpMethod.GET, requestEntity, GitHubGetUserResponse.class).getBody();
-        } catch (RestClientResponseException e) {
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {
+                log.error("User: {} not found.", username, e);
+                throw new GitHubResourceNotFoundException(e);
+            }
+
             log.error("Unable to get user: {}", username, e);
-            return null;
+            throw new GitHubClientException(e);
+        } catch (HttpServerErrorException e) {
+            log.error("Unable to get user: {}", username, e);
+            throw new GitHubServerException(e);
         }
     }
 }

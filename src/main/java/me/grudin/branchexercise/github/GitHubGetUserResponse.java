@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.Instant;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-record GitHubGetUserResponse(
+public record GitHubGetUserResponse(
     String login,
     Long id,
     String avatarUrl,
