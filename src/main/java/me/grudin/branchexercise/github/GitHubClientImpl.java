@@ -1,9 +1,11 @@
 package me.grudin.branchexercise.github;
 
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -51,6 +53,41 @@ class GitHubClientImpl implements GitHubClient {
             throw new GitHubClientException(e);
         } catch (HttpServerErrorException e) {
             log.error("Unable to get user: {}", username, e);
+            throw new GitHubServerException(e);
+        }
+    }
+
+    @Override
+    public List<GitHubRepo> getRepos(String username) {
+        if (StringUtils.isBlank(username)) {
+            log.warn("Attempted to retrieve a user's repos without a username.");
+            throw new IllegalArgumentException("Username must not be blank.");
+        }
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(gitHubProperties.getBaseUrl())
+            .path("/users/{username}/repos")
+            .buildAndExpand(username)
+            .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCEPT, "application/vnd.github+json");
+
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        try {
+            return restTemplate
+                .exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<GitHubRepo>>() {})
+                .getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {
+                log.error("User: {} not found.", username, e);
+                throw new GitHubResourceNotFoundException(e);
+            }
+
+            log.error("Unable to list repos for user: {}", username, e);
+            throw new GitHubClientException(e);
+        } catch (HttpServerErrorException e) {
+            log.error("Unable to list repos for user: {}", username, e);
             throw new GitHubServerException(e);
         }
     }
