@@ -9,9 +9,10 @@ record GitHubGetUserResponse(
     String login,
     Long id,
     String avatarUrl,
+    String url,
+    String reposUrl,
+    String name,
     String location,
     String email,
-    String url,
-    Instant createdAt,
-    String reposUrl
+    Instant createdAt
 ) {}

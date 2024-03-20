@@ -98,11 +98,12 @@ class GitHubClientImplIntegrationTest {
                     "foobar",
                     1L,
                     "https://github.com/images/error/octocat_happy.gif",
+                    "https://api.github.com/users/foobar",
+                    "https://api.github.com/users/foobar/repos",
+                    "Foo Bar",
                     "Minneapolis",
                     "foobar@example.com",
-                    "https://api.github.com/users/foobar",
-                    Instant.from(OffsetDateTime.of(2020, 1, 1, 12, 0, 0, 0, ZoneOffset.UTC)),
-                    "https://api.github.com/users/foobar/repos"
+                    Instant.from(OffsetDateTime.of(2020, 1, 1, 12, 0, 0, 0, ZoneOffset.UTC))
                 ),
                 gitHubClient.getUser("foobar")
             );
