@@ -1,5 +1,6 @@
 package me.grudin.branchexercise.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.Instant;
@@ -13,6 +14,6 @@ record User(
     String geoLocation,
     String email,
     String url,
-    Instant createdAt,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") Instant createdAt,
     List<Repo> repos
 ) {}

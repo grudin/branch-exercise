@@ -60,7 +60,7 @@ class UserControllerMvcTest {
                           "geo_location": "Minneapolis",
                           "email": "foobar@example.com",
                                   "url": "https://github.com/foobar",
-                                  "created_at": "2020-01-01T12:00:00Z",
+                                          "created_at": "2020-01-01 12:00:00",
                                   "repos": [
                                     {
                                       "name": "Hello-World",
