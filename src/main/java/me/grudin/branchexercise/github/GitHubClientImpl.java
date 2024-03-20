@@ -42,6 +42,7 @@ class GitHubClientImpl implements GitHubClient {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         try {
+            // TODO: Cache response
             return restTemplate.exchange(uri, HttpMethod.GET, requestEntity, GitHubUser.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {
@@ -75,6 +76,7 @@ class GitHubClientImpl implements GitHubClient {
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         try {
+            // TODO: Cache response
             return restTemplate
                 .exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<GitHubRepo>>() {})
                 .getBody();

@@ -14,4 +14,5 @@ class GitHubProperties {
 
     @NotBlank
     private String baseUrl;
+    // TODO: Add auth token
 }
